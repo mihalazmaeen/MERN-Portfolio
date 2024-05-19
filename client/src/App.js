@@ -1,9 +1,10 @@
-import logo from './logo.svg';
-import './App.css';
 
+import './App.css';
 function App() {
   return (
-   <h2>Hello Developers</h2>
+    <div className="App flex h-screen justify-center items-center">
+      <h1 className="text-3xl">hello</h1>
+    </div>
   );
 }
 
