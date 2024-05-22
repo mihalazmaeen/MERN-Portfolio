@@ -13,6 +13,13 @@ module.exports = {
         tertiary: "#54D688",
       },
     },
+    screens: {
+      lg: { max: "2023px" },
+      // => @media (max-width: 1023px) { ... }
+
+      sm: { max: "1000px" },
+      // => @media (max-width: 639px) { ... }
+    },
   },
   plugins: [],
 };

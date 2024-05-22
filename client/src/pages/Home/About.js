@@ -3,14 +3,22 @@ import SectionTitle from "../../components/SectionTitle";
 import mihalImage from "./mihal.png";
 
 function About() {
-    const skills=[
-        "PHP","JavaScript","Laravel","VueJs","ReactJs","NodeJs","SQL","HTML/CSS","JQuery/AJAX"
-    ]
+  const skills = [
+    "PHP",
+    "JavaScript",
+    "Laravel",
+    "VueJs",
+    "ReactJs",
+    "NodeJs",
+    "SQL",
+    "HTML/CSS",
+    "JQuery/AJAX",
+  ];
   return (
     <div>
       <SectionTitle title="About" />
-      <div className="flex w-full items-center">
-        <div className="h-[50vh] w-1/2">
+      <div className="flex w-full items-center sm:flex-col">
+        <div className="h-[70vh] w-1/2 sm:w-full,mb-3">
           <img
             src={mihalImage}
             alt="mihal"
@@ -19,7 +27,7 @@ function About() {
             background="transparent"
           />
         </div>
-        <div className="flex flex-col gap-5 w-1/2">
+        <div className="flex flex-col gap-5 w-1/2 sm:w-full">
           <p className="text-white">
             Highly motivated technology enthusiast, aspire to work with cutting
             edge innovations,looking for a role in an IT organization that will
