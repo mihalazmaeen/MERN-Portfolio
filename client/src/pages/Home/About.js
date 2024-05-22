@@ -41,8 +41,8 @@ function About() {
           Here are the Technologies I have used
         </h1>
         <div className="flex flex-wrap gap-10 mt-5">
-          {skills.map((skill) => (
-            <div className="border border-white py-3 px-5">
+          {skills.map((skill,index) => (
+            <div key={index} className="border border-white py-3 px-5">
               <h1 className="text-tertiary">{skill}</h1>
             </div>
           ))}
