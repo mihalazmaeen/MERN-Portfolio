@@ -5,3 +5,19 @@
 *{
   font-family: "Montserrat", sans-serif;
 }
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #0A192F; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #30817d8c; 
+}
+
+/* Handle on hover */
