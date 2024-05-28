@@ -25,5 +25,55 @@ i {
 i:hover {
   color: white;
 }
+.m {
+  animation: m 1s infinite;
+}
+@keyframes m {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.d {
+  animation: d 1s infinite;
+}
+@keyframes d {
+  0% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.a {
+  animation: a 1s infinite;
+}
+@keyframes a {
+  0% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
 
 /* Handle on hover */
