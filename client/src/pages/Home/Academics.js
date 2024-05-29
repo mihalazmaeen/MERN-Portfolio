@@ -1,13 +1,12 @@
-import React from 'react'
-import SectionTitle from '../../components/SectionTitle';
-import { academics } from '../../resources/academics';
-
+import React from "react";
+import SectionTitle from "../../components/SectionTitle";
+import { academics } from "../../resources/academics";
 
 function Academics() {
-    const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
+  const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
   return (
     <div>
-      <SectionTitle title={"Academic Info"} />
+      <SectionTitle title={"Education"} />
       <div className="flex py-10 gap-10 sm:flex-col">
         <div className="flex flex-col gap-10 border-l-2 border-[#30817d8c] w-1/3 sm:flex-row sm:w-full sm:overflow-x-scroll">
           {academics.map((academic, index) => (
@@ -46,4 +45,4 @@ function Academics() {
   );
 }
 
-export default Academics
+export default Academics;
