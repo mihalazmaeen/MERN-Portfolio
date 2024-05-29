@@ -146,4 +146,5 @@ module.exports = {
   Project: mongoose.model("projects", projectsSchema),
   Education: mongoose.model("education", educationSchema),
   Contact: mongoose.model("contacts", contactSchema),
-};
+  
+}; 
