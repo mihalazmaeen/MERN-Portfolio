@@ -1,26 +1,21 @@
 import React from "react";
 import SectionTitle from "../../components/SectionTitle";
-import mihalImage from "./mihal.png";
+
+import { useSelector } from "react-redux";
 
 function About() {
-  const skills = [
-    "PHP",
-    "JavaScript",
-    "Laravel",
-    "VueJs",
-    "ReactJs",
-    "NodeJs",
-    "SQL",
-    "HTML/CSS",
-    "JQuery/AJAX",
-  ];
+  const { loading, portfolioData } = useSelector((state) => state.root);
+  const { about } = portfolioData;
+  console.log(about);
+  const { aboutIntro, skillText, skills, image } = about;
+
   return (
     <div>
       <SectionTitle title="About" />
       <div className="flex w-full items-center sm:flex-col">
         <div className="h-[70vh] w-1/2 sm:w-full,mb-3">
           <img
-            src={mihalImage}
+            src={`http://localhost:5000/uploads/${image}`}
             alt="mihal"
             height={400}
             width={300}
@@ -28,20 +23,13 @@ function About() {
           />
         </div>
         <div className="flex flex-col gap-5 w-1/2 sm:w-full">
-          <p className="text-white">
-            Highly motivated technology enthusiast, aspire to work with cutting
-            edge innovations,looking for a role in an IT organization that will
-            allow me to adopt new technology trends and where I can utilize my
-            knowledge and skills for the organization’s growth.
-          </p>
+          <p className="text-white">{aboutIntro || ""}</p>
         </div>
       </div>
       <div className="py-5">
-        <h1 className="text-tertiary text-xl">
-          Here are the Technologies I have used
-        </h1>
+        <h1 className="text-tertiary text-xl">{skillText || ""}</h1>
         <div className="flex flex-wrap gap-10 mt-5">
-          {skills.map((skill,index) => (
+          {skills.map((skill, index) => (
             <div key={index} className="border border-white py-3 px-5">
               <h1 className="text-tertiary">{skill}</h1>
             </div>

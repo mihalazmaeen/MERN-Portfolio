@@ -29,7 +29,7 @@ const introSchema = new mongoose.Schema({
 
 
 const aboutSchema = new mongoose.Schema({
-    about: {
+    aboutIntro: {
         type: String,
         required: true
     },

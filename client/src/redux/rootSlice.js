@@ -1,21 +1,22 @@
+import { createSlice } from "@reduxjs/toolkit";
 const rootSlice = createSlice({
-    name:'root',
-    initialState:{
-        loading:false,
-        portfolioData:null
+  name: "root",
+  initialState: {
+    loading: false,
+    portfolioData: null,
+  },
+  reducers: {
+    ShowLoading: (state, action) => {
+      state.loading = true;
     },
-    reducers:{
-        ShowLoading:(state,action)=>{
-            state.loading = true;
-        },
-        HideLoading:(state,action)=>{
-            state.loading = false;
-        },
-        SetPortfolioData:(state,action)=>{
-            state.portfolioData = action.payload;
-        }
-    }
-})
+    HideLoading: (state, action) => {
+      state.loading = false;
+    },
+    SetPortfolioData: (state, action) => {
+      state.portfolioData = action.payload;
+    },
+  },
+});
 
-export default rootSlice;
-export const {ShowLoading,HideLoading,SetPortfolioData} = rootSlice.actions
+export default rootSlice.reducer;
+export const { ShowLoading, HideLoading, SetPortfolioData } = rootSlice.actions;

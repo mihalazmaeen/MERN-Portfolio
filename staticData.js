@@ -14,7 +14,7 @@ const intros = [
 const about = [
   {
     image: mihalImage,
-    about:
+    aboutIntro:
       "Highly motivated technology enthusiast, aspire to work with cutting edge innovations,looking for a role in an IT organization that will allow me to adopt new technology trends and where I can utilize my knowledge and skills for the organization’s growth",
     skillTitle: "Here are the Technologies I have used",
     skills: [
