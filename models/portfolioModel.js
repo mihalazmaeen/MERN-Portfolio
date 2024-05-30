@@ -3,26 +3,26 @@ const mongoose=require ('mongoose');
 
 const introSchema = new mongoose.Schema({
   welcomeText: {
-    type: string,
+    type: String,
     required: true,
   },
   firstName: {
-    type: string,
+    type: String,
     required: true,
   },
   middleName: {
-    type: string,
+    type: String,
   },
   lastName: {
-    type: string,
+    type: String,
     required: true,
   },
   designation: {
-    type: string,
+    type: String,
     required: true,
   },
   description: {
-    type: string,
+    type: String,
     required: true,
   },
 });
@@ -30,15 +30,15 @@ const introSchema = new mongoose.Schema({
 
 const aboutSchema = new mongoose.Schema({
     about: {
-        type: string,
+        type: String,
         required: true
     },
     image: {
-        type: string,
+        type: String,
         required: true,
     },
     skillTitle: {
-        type: string,
+        type: String,
         required: true,
     },
     skills:{
@@ -49,92 +49,92 @@ const aboutSchema = new mongoose.Schema({
 
 const experienceSchema = new mongoose.Schema({
   company: {
-    type: string,
+    type: String,
     required: true,
   },
   title: {
-    type: string,
+    type: String,
     required: true,
   },
   period: {
-    type: string,
+    type: String,
     required: true,
   },
   description: {
-    type: string,
+    type: String,
     required: true
   }
 });
 
 const projectsSchema = new mongoose.Schema({
   period: {
-    type: string,
+    type: String,
     required: true,
   },
   title: {
-    type: string,
+    type: String,
     required: true,
   },
   image: {
-    type: string,
+    type: String,
     required: true,
   },
   description: {
-    type: string,
+    type: String,
     required: true,
   },
   link: {
-    type: string,
+    type: String,
     required: true
   },
   technologies: {
-    type: array,
+    type: Array,
     required: true
   }
 });
 
 const educationSchema = new mongoose.Schema({
   stage: {
-    type: string,
+    type: String,
     required: true,
   },
   level: {
-    type: string,
+    type: String,
     required: true,
   },
   institution: {
-    type: string,
+    type: String,
     required: true,
   },
   graduated: {
-    type: string,
+    type: String,
     required: true,
   },
 });
 
 const contactSchema = new mongoose.Schema({
   name: {
-    type: string,
+    type: String,
     required: true,
   },
   age: {
-    type: number,
+    type: Number,
     required: true,
   },
   gender: {
-    type: string,
+    type: String,
     required: true,
   },
   email: {
-    type: string,
+    type: String,
     required: true,
   },
   country: {
-    type: string,
+    type: String,
     required: true,
   },
   mobile: {
-    type: string,
+    type: String,
     required: true,
   },
 });
@@ -146,5 +146,4 @@ module.exports = {
   Project: mongoose.model("projects", projectsSchema),
   Education: mongoose.model("education", educationSchema),
   Contact: mongoose.model("contacts", contactSchema),
-  
 }; 
