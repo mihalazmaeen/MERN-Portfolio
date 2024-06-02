@@ -11,18 +11,18 @@ function App() {
   const {loading, portfolioData} = useSelector((state) => state.root);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const getPortfolioData = async () => {
-      try {
-        const response = await axios.get("/api/portfolio/get-portfolio-data");
-        dispatch(SetPortfolioData(response.data));
-      } catch (error) {
-        console.error("Error fetching portfolio data", error);
-      }
-    };
+  const getPortfolioData = async () => {
+    try {
+      const response = await axios.get("/api/portfolio/get-portfolio-data");
+      dispatch(SetPortfolioData(response.data));
+    } catch (error) {
+      console.error("Error fetching portfolio data", error);
+    }
+  };
 
-    getPortfolioData();
-  }, [dispatch]);
+  useEffect(() => {
+      getPortfolioData();
+  }, []);
 
 
 

@@ -11,6 +11,16 @@ const intros = [
   },
 ];
 
+const educations = [
+  {
+    stage: "Hello",
+    level: "Mihal",
+    institution: "MD",
+    graduated: "Azmaeen",
+   
+  },
+];
+
 const about = [
   {
     image: mihalImage,

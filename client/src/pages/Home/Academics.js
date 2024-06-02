@@ -1,15 +1,21 @@
 import React from "react";
 import SectionTitle from "../../components/SectionTitle";
 import { academics } from "../../resources/academics";
+import { useSelector } from "react-redux";
 
 function Academics() {
   const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
+  const { loading, portfolioData } = useSelector((state) => state.root);
+  const { education } = portfolioData;
+
+  const { stage, level, institution, graduated } = education;
+  console.log(portfolioData);
   return (
     <div>
       <SectionTitle title={"Education"} />
       <div className="flex py-10 gap-10 sm:flex-col">
         <div className="flex flex-col gap-10 border-l-2 border-[#30817d8c] w-1/3 sm:flex-row sm:w-full sm:overflow-x-scroll">
-          {academics.map((academic, index) => (
+          {education.map((edu, index) => (
             <div
               key={index}
               onClick={() => setSelectedItemIndex(index)}
@@ -23,7 +29,7 @@ function Academics() {
                     : "text-white"
                 }`}
               >
-                {academic.stage}
+                {edu.stage}
               </h1>
             </div>
           ))}
@@ -31,13 +37,13 @@ function Academics() {
 
         <div className="flex flex-col gap-5">
           <h1 className="text-secondary text-xl">
-            {academics[selectedItemIndex].institution}
+            {education[selectedItemIndex].institution}
           </h1>
           <h1 className="text-tertiary text-xl">
-            {academics[selectedItemIndex].level}
+            {education[selectedItemIndex].level}
           </h1>
           <p className="text-white">
-            Date of Completion: {academics[selectedItemIndex].graduated}
+            Date of Completion: {education[selectedItemIndex].graduated}
           </p>
         </div>
       </div>
