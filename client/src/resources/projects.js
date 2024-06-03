@@ -1,7 +1,7 @@
 export const projects = [
   {
-    technologies: [],
-    _id: "1",
+    technologies: ["PHP", "Laravel"],
+ 
     title: "Laravel Project",
     image: "",
     period: "May 2023 - Present",
@@ -10,8 +10,8 @@ export const projects = [
     link: "www.abc.com",
   },
   {
-    technologies: [],
-    _id: "2",
+    technologies: ["JavaScript", "VueJS"],
+  
     title: "MERN Project",
     image: "",
     period: "May 2023 - Present",
@@ -20,8 +20,8 @@ export const projects = [
     link: "www.abc.com",
   },
   {
-    technologies: [],
-    _id: "3",
+    technologies: ["Laravel", "React", "NodeJS"],
+    
     title: "SQL Project",
     image: "",
     period: "May 2023 - Present",
