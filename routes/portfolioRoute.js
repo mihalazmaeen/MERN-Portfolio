@@ -13,7 +13,7 @@ router.get("/get-portfolio-data", async (req, res) => {
     const intros = await Intro.find();
     const abouts = await About.find();
     const projects = await Project.find();
-    const experiences = await Experience.find();
+    const experience = await Experience.find();
     const educations = await Education.find();
     const contacts = await Contact.find();
 
@@ -22,7 +22,7 @@ router.get("/get-portfolio-data", async (req, res) => {
       about: abouts[0],
       project: projects,
       education: educations,
-      experience: experiences,
+      experience: experience,
       contact: contacts,
     });
   } catch (error) {

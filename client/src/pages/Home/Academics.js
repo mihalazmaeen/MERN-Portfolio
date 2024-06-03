@@ -1,6 +1,6 @@
 import React from "react";
 import SectionTitle from "../../components/SectionTitle";
-import { academics } from "../../resources/academics";
+
 import { useSelector } from "react-redux";
 
 function Academics() {
@@ -9,7 +9,7 @@ function Academics() {
   const { education } = portfolioData;
 
   const { stage, level, institution, graduated } = education;
-  console.log(portfolioData);
+
   return (
     <div>
       <SectionTitle title={"Education"} />

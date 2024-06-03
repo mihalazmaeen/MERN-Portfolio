@@ -1,5 +1,4 @@
-const mongoose=require ('mongoose');
-
+const mongoose = require("mongoose");
 
 const introSchema = new mongoose.Schema({
   welcomeText: {
@@ -27,25 +26,24 @@ const introSchema = new mongoose.Schema({
   },
 });
 
-
 const aboutSchema = new mongoose.Schema({
-    aboutIntro: {
-        type: String,
-        required: true
-    },
-    image: {
-        type: String,
-        required: true,
-    },
-    skillTitle: {
-        type: String,
-        required: true,
-    },
-    skills:{
-        type: Array,
-        required: true
-    }
-})
+  aboutIntro: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  skillTitle: {
+    type: String,
+    required: true,
+  },
+  skills: {
+    type: Array,
+    required: true,
+  },
+});
 
 const experienceSchema = new mongoose.Schema({
   company: {
@@ -62,8 +60,8 @@ const experienceSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const projectsSchema = new mongoose.Schema({
@@ -85,12 +83,12 @@ const projectsSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    required: true
+    required: true,
   },
   technologies: {
     type: Array,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const educationSchema = new mongoose.Schema({
@@ -142,8 +140,8 @@ const contactSchema = new mongoose.Schema({
 module.exports = {
   Intro: mongoose.model("intros", introSchema),
   About: mongoose.model("abouts", aboutSchema),
-  Experience: mongoose.model("experience", experienceSchema),
+  Experience: mongoose.model("experiences", experienceSchema),
   Project: mongoose.model("projects", projectsSchema),
   Education: mongoose.model("education", educationSchema),
   Contact: mongoose.model("contacts", contactSchema),
-}; 
+};
