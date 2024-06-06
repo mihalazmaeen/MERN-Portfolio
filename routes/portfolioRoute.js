@@ -23,10 +23,10 @@ router.get("/get-portfolio-data", async (req, res) => {
       project: projects,
       education: educations,
       experience: experience,
-      contact: contacts,
+      contact: contacts[0],
     });
   } catch (error) {
-    console.error(error);
+   
     res.status(500).send(error);
   }
 });

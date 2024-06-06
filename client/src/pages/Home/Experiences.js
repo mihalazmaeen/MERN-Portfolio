@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 function Experiences() {
   const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
   const { loading, portfolioData } = useSelector((state) => state.root);
-  console.log(portfolioData);
   const { experience } = portfolioData;
 
   const { company, title, period, description } = experience;

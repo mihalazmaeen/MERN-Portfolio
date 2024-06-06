@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 function Projects() {
   const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
   const { loading, portfolioData } = useSelector((state) => state.root);
-  console.log(portfolioData);
   const { project } = portfolioData;
 
   const { title, period, image, description, link, technologies } = project;
