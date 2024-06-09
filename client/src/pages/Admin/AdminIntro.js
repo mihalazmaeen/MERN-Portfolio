@@ -15,7 +15,6 @@ function AdminIntro() {
         ...values,
         _id: portfolioData?.intro?._id,
       });
-      console.log(response)
       dispatch(HideLoading());
       if (response.data.success) {
         message.success(response.data.message);

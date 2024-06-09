@@ -7,7 +7,7 @@ function About() {
   const { loading, portfolioData } = useSelector((state) => state.root);
   const { about } = portfolioData;
 
-  const { aboutIntro, skillText, skills, image } = about;
+  const { aboutIntro, skillTitle, skills, image } = about;
 
   return (
     <div>
@@ -27,7 +27,7 @@ function About() {
         </div>
       </div>
       <div className="py-5">
-        <h1 className="text-tertiary text-xl">{skillText || ""}</h1>
+        <h1 className="text-white text-xl">{skillTitle || ""}</h1>
         <div className="flex flex-wrap gap-10 mt-5">
           {skills.map((skill, index) => (
             <div key={index} className="border border-white py-3 px-5">
