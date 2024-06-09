@@ -26,7 +26,25 @@ router.get("/get-portfolio-data", async (req, res) => {
       contact: contacts[0],
     });
   } catch (error) {
-   
+    res.status(500).send(error);
+  }
+});
+
+router.post("/update-intro", async (req, res) => {
+  try {
+    const intro = await Intro.findByIdAndUpdate(
+      { _id: req.body._id },
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({
+      data: intro,
+      success: true,
+      message: "Intro updated successfully",
+    });
+  } catch (error) {
     res.status(500).send(error);
   }
 });

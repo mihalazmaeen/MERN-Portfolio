@@ -1,13 +1,33 @@
 import React from "react";
 import { Form, Input, Row, Col } from "antd";
-import { useSelector } from "react-redux";
-
+import { useSelector, useDispatch } from "react-redux";
+import { ShowLoading, HideLoading } from "../../redux/rootSlice";
+import axios from "axios";
+import { message } from "antd";
 
 function AdminIntro() {
-    const {portfolioData} = useSelector((state) => state.root);
-    const onFinish=(values)=>{
-        console.log(values)
+  const dispatch = useDispatch();
+  const { portfolioData } = useSelector((state) => state.root);
+  const onFinish = async (values) => {
+    try {
+      dispatch(ShowLoading());
+      const response = await axios.post("/api/portfolio/update-intro", {
+        ...values,
+        _id: portfolioData?.intro?._id,
+      });
+      console.log(response)
+      dispatch(HideLoading());
+      if (response.data.success) {
+        message.success(response.data.message);
+      } else {
+        message.error(response.data.message);
+      }
+    } catch (error) {
+      dispatch(HideLoading());
+      message.error(error.message);
     }
+  };
+
   return (
     <div>
       <Form
@@ -21,7 +41,6 @@ function AdminIntro() {
         style={{
           maxWidth: 1200,
         }}
-      
         autoComplete="on"
         onFinish={onFinish}
         layout="vertical"
@@ -99,7 +118,9 @@ function AdminIntro() {
           <Input.TextArea placeholder="Description" />
         </Form.Item>
         <div className="flex justify-end w-full">
-          <button className="px-5 py-2 bg-primary text-white" type="submit">SAVE</button>
+          <button className="px-5 py-2 bg-primary text-white" type="submit">
+            SAVE
+          </button>
         </div>
       </Form>
     </div>
