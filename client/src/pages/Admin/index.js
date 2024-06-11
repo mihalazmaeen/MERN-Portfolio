@@ -3,8 +3,8 @@ import Header from "../../components/Header";
 import { Tabs } from "antd";
 import AdminIntro from "./AdminIntro";
 import AdminAbout from "./AdminAbout";
+import AdminExperiences from "./AdminExperiences";
 import { useSelector } from "react-redux";
-
 
 function Admin() {
   const { portfolioData } = useSelector((state) => state.root);
@@ -19,6 +19,11 @@ function Admin() {
       key: "2",
       label: "About",
       children: <AdminAbout />,
+    },
+    {
+      key: "3",
+      label: "Experience",
+      children: <AdminExperiences />,
     },
   ];
   return (

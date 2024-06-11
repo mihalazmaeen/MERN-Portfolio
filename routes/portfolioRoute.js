@@ -62,25 +62,6 @@ router.post("/update-intro", async (req, res) => {
   }
 });
 // Update About Section
-// router.post("/update-about", async (req, res) => {
-//   try {
-//     const about = await About.findByIdAndUpdate(
-//       { _id: req.body._id },
-//       req.body,
-//       {
-//         new: true,
-//       }
-//     );
-//     res.status(200).send({
-//       data: about,
-//       success: true,
-//       message: "About Section updated successfully",
-//     });
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
-
 router.post("/update-about", upload.single("image"), async (req, res) => {
   try {
     let updatedData = req.body;
@@ -100,6 +81,20 @@ router.post("/update-about", upload.single("image"), async (req, res) => {
       data: about,
       success: true,
       message: "About Section updated successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+// Add Experience
+router.post("/add-experience", async (req, res) => {
+  try {
+    const experience = new Experience(req.body);
+    await experience.save();
+    res.status(200).send({
+      data: experience,
+      success: true,
+      message: "Experience added successfully",
     });
   } catch (error) {
     res.status(500).send(error);
