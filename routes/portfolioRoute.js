@@ -11,7 +11,7 @@ const {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/uploads"); // Specify the destination folder for storing images
+    cb(null, "uploads"); // Specify the destination folder for storing images
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname); // Keep the original file name

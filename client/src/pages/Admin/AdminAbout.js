@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { ShowLoading, HideLoading } from "../../redux/rootSlice";
@@ -8,25 +8,50 @@ function AdminAbout() {
   const dispatch = useDispatch();
   const { portfolioData } = useSelector((state) => state.root);
   const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
+  useEffect(() => {
+    // Set the initial image preview URL if there's an existing image
+    if (portfolioData?.about?.image) {
+      setImagePreview(
+        `http://localhost:5000/uploads/${portfolioData.about.image}`
+      );
+    }
+  }, [portfolioData]);
 
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
 
-      const requestData = {
-        ...values,
-        _id: portfolioData?.about?._id,
-        image: imageFile, // Assign the image file directly
-      };
+      const formData = new FormData(); // Create a FormData object
 
-      // Append image file to the request data if it exists
+      // Add form fields from values object (excluding _id)
+      Object.entries(values).forEach(([key, value]) => {
+        if (key === "skills") {
+          // Convert skills string to array
+          const tempSkills = value.split(",").map((skill) => skill.trim());
+          tempSkills.forEach((skill) => formData.append("skills[]", skill));
+        } else if (key !== "_id") {
+          // Don't include _id in the FormData
+          formData.append(key, value);
+        }
+      });
+
+      // If imageFile exists, add it to the FormData
       if (imageFile) {
-        requestData.image = imageFile;
+        formData.append("image", imageFile);
+      }
+
+      // Handle _id separately (assuming you have logic to retrieve it)
+      const aboutId = portfolioData?.about?._id; // Retrieve the _id from your state
+      if (aboutId) {
+        formData.append("_id", aboutId);
       }
 
       const response = await axios.post(
         "/api/portfolio/update-about",
-        requestData
+        formData, // Pass the FormData directly
+        { headers: { "Content-Type": "multipart/form-data" } } // Set headers for FormData
       );
 
       dispatch(HideLoading());
@@ -42,8 +67,11 @@ function AdminAbout() {
   };
 
   const handleImageChange = (e) => {
-    setImageFile(e.target.files[0]); // Set the selected image file
+    const file = e.target.files[0];
+    setImageFile(file); // Set the selected image file
+    setImagePreview(URL.createObjectURL(file)); // Create a preview URL for the selected image
   };
+
   return (
     <div>
       <Form
@@ -54,7 +82,10 @@ function AdminAbout() {
         autoComplete="on"
         onFinish={onFinish}
         layout="vertical"
-        initialValues={portfolioData?.about}
+        initialValues={{
+          ...portfolioData?.about,
+          skills: portfolioData?.about?.skills.join(", "),
+        }}
       >
         <Form.Item
           name="aboutIntro"
@@ -70,8 +101,20 @@ function AdminAbout() {
         >
           <Input placeholder="Skill Title" />
         </Form.Item>
+        <Form.Item
+          name="skills"
+          label="Skills"
+          rules={[{ required: true, message: "Please input skills!" }]}
+        >
+          <Input.TextArea placeholder="Skills" />
+        </Form.Item>
         <Form.Item label="Upload Image">
           <input type="file" onChange={handleImageChange} accept="image/*" />
+          {imagePreview && (
+            <div style={{ marginTop: 10 }}>
+              <img src={imagePreview} alt="Preview" style={{ width: 200 }} />
+            </div>
+          )}
         </Form.Item>
         <div className="flex justify-end w-full">
           <Button type="primary" htmlType="submit">
