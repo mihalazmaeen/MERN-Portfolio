@@ -65,10 +65,7 @@ const experienceSchema = new mongoose.Schema({
 });
 
 const projectsSchema = new mongoose.Schema({
-  period: {
-    type: String,
-    required: true,
-  },
+
   title: {
     type: String,
     required: true,

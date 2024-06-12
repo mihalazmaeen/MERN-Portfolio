@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Form, Input, Button, message } from "antd";
 import { ShowLoading, HideLoading, ReloadData } from "../../redux/rootSlice";
@@ -11,9 +11,9 @@ function AdminExperiences() {
   const [showAddEditModal, setShowAddEditModal] = React.useState(false);
   const [selectedItemorEdit, setSelectedItemorEdit] = React.useState(null);
   const { experience } = portfolioData;
-  const [type, setType] = React.useState("add");
+  const [form] = Form.useForm();
 
-  const  onDelete = async (item) => {
+  const onDelete = async (item) => {
     try {
       dispatch(ShowLoading());
       const response = await axios.post("/api/portfolio/delete-experience", {
@@ -22,36 +22,6 @@ function AdminExperiences() {
       dispatch(HideLoading());
       if (response.data.success) {
         message.success(response.data.message);
-        dispatch(HideLoading());
-        dispatch(ReloadData(true));
-      } else {
-        message.error(response.data.message);
-      }
-  }catch(error){
-    dispatch(HideLoading());
-    message.error(error.message);
-  }
-  };
-  const onFinish = async (values) => {
-    try {
-      dispatch(ShowLoading());
-      let response;
-      if (selectedItemorEdit) {
-        response= await axios.post("/api/portfolio/update-experience", {
-          ...values,
-          _id: selectedItemorEdit._id,
-        });
-      }else{
-          response = await axios.post("/api/portfolio/add-experience", values);
-      }
-    
-  
-      dispatch(HideLoading());
-      if (response.data.success) {
-        message.success(response.data.message);
-        setShowAddEditModal(false);
-        setSelectedItemorEdit(null);
-        dispatch(HideLoading());
         dispatch(ReloadData(true));
       } else {
         message.error(response.data.message);
@@ -62,22 +32,64 @@ function AdminExperiences() {
     }
   };
 
+  const onFinish = async (values) => {
+    try {
+      dispatch(ShowLoading());
+      let response;
+      if (selectedItemorEdit) {
+        response = await axios.post("/api/portfolio/update-experience", {
+          ...values,
+          _id: selectedItemorEdit._id,
+        });
+      } else {
+        response = await axios.post("/api/portfolio/add-experience", values);
+      }
+
+      dispatch(HideLoading());
+      if (response.data.success) {
+        message.success(response.data.message);
+        setShowAddEditModal(false);
+        setSelectedItemorEdit(null);
+        dispatch(ReloadData(true));
+        form.resetFields();
+      } else {
+        message.error(response.data.message);
+      }
+    } catch (error) {
+      dispatch(HideLoading());
+      message.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedItemorEdit) {
+      form.setFieldsValue(selectedItemorEdit);
+    } else {
+      form.resetFields();
+    }
+  }, [selectedItemorEdit, form]);
+
+  const handleAdd = () => {
+    setSelectedItemorEdit(null);
+    form.resetFields();
+    setShowAddEditModal(true);
+  };
+
+  const handleEdit = (experience) => {
+    setSelectedItemorEdit(experience);
+    setShowAddEditModal(true);
+  };
+
   return (
     <div>
       <div className="flex justify-end">
-        <button
-          className="bg-primary text-white px-5 py-2"
-          onClick={() => {
-            setSelectedItemorEdit(null);
-            setShowAddEditModal(true);
-          }}
-        >
+        <button className="bg-primary text-white px-5 py-2" onClick={handleAdd}>
           Add Experience
         </button>
       </div>
       <div className="grid grid-cols-4 gap-2">
         {experience.map((experience, index) => (
-          <div className="shadow border p-5 border-gray-400">
+          <div key={index} className="shadow border p-5 border-gray-400">
             <h1 className="text-primary text-xl font-bold mb-2">
               {experience.company}
             </h1>
@@ -88,11 +100,7 @@ function AdminExperiences() {
             <div className="flex justify-end gap-5 mt-2">
               <button
                 className="bg-primary text-white px-5 py-2"
-                onClick={() => {
-                  setSelectedItemorEdit(experience);
-                  setShowAddEditModal(true);
-                  setType("edit");
-                }}
+                onClick={() => handleEdit(experience)}
               >
                 Edit
               </button>
@@ -106,7 +114,7 @@ function AdminExperiences() {
           </div>
         ))}
       </div>
-      {(type === "add" || selectedItemorEdit) && (
+      {showAddEditModal && (
         <Modal
           open={showAddEditModal}
           title={selectedItemorEdit ? "Edit Experience" : "Add Experience"}
@@ -114,13 +122,10 @@ function AdminExperiences() {
           onCancel={() => {
             setShowAddEditModal(false);
             setSelectedItemorEdit(null);
+            form.resetFields();
           }}
         >
-          <Form
-            layout="vertical"
-            onFinish={onFinish}
-            initialValues={selectedItemorEdit}
-          >
+          <Form form={form} layout="vertical" onFinish={onFinish}>
             <Form.Item name="company" label="Company">
               <Input placeholder="Company" />
             </Form.Item>
@@ -135,12 +140,17 @@ function AdminExperiences() {
             </Form.Item>
             <div className="flex justify-end">
               <button
+                type="button"
                 className="border-primary text-primary px-5 py-2"
-                onClick={() => setShowAddEditModal(false)}
+                onClick={() => {
+                  setShowAddEditModal(false);
+                  setSelectedItemorEdit(null);
+                  form.resetFields();
+                }}
               >
                 Cancel
               </button>
-              <button className="bg-primary text-white px-5 py-2">
+              <button className="bg-primary text-white px-5 py-2" type="submit">
                 {selectedItemorEdit ? "Update" : "Add"}
               </button>
             </div>

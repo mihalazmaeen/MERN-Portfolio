@@ -122,11 +122,86 @@ router.post("/update-experience", async (req, res) => {
 // Delete Experience
 router.post("/delete-experience", async (req, res) => {
   try {
-    const experience = await Experience.findByIdAndDelete({ _id: req.body._id });
+    const experience = await Experience.findByIdAndDelete({
+      _id: req.body._id,
+    });
     res.status(200).send({
       data: experience,
       success: true,
       message: "Experience deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Add Project
+router.post("/add-project", upload.single("image"), async (req, res) => {
+  try {
+    let newProjectData = req.body;
+    console.log(newProjectData);
+
+    // Check if an image file was uploaded
+    if (req.file) {
+      newProjectData.image = req.file.originalname; // Add the image field with the file name
+    }
+
+    const project = new Project(newProjectData);
+    await project.save();
+
+    res.status(200).send({
+      data: project,
+      success: true,
+      message: "Project added successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Update Project
+router.post("/update-project", upload.single("image"), async (req, res) => {
+  try {
+    let updatedData = req.body;
+
+    // Check if an image file was uploaded
+    if (req.file) {
+      updatedData.image = req.file.originalname; // Update the image field with the file name
+    }
+
+    const project = await Project.findByIdAndUpdate(
+      { _id: req.body._id },
+      updatedData,
+      { new: true }
+    );
+
+    res.status(200).send({
+      data: project,
+      success: true,
+      message: "Project updated successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Delete Project
+
+router.post("/delete-project", async (req, res) => {
+  try {
+    const project = await Project.findByIdAndDelete(req.body._id);
+
+    if (!project) {
+      return res.status(404).send({
+        success: false,
+        message: "Project not found",
+      });
+    }
+
+    res.status(200).send({
+      data: project,
+      success: true,
+      message: "Project deleted successfully",
     });
   } catch (error) {
     res.status(500).send(error);

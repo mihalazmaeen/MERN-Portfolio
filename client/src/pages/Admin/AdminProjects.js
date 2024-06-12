@@ -1,17 +1,29 @@
-import { Modal } from "antd";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Modal, Form, Input, Button, message } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { Form, Input, Button, message } from "antd";
 import { ShowLoading, HideLoading, ReloadData } from "../../redux/rootSlice";
 import axios from "axios";
 
 function AdminProjects() {
   const dispatch = useDispatch();
   const { portfolioData } = useSelector((state) => state.root);
-  const [showAddEditModal, setShowAddEditModal] = React.useState(false);
-  const [selectedItemorEdit, setSelectedItemorEdit] = React.useState(null);
+  const [showAddEditModal, setShowAddEditModal] = useState(false);
+  const [selectedItemorEdit, setSelectedItemorEdit] = useState(null);
   const { project } = portfolioData;
-  const [type, setType] = React.useState("add");
+  const [type, setType] = useState("add");
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (selectedItemorEdit?.image) {
+      setImagePreview(
+        `http://localhost:5000/uploads/${selectedItemorEdit.image}`
+      );
+    } else {
+      setImagePreview("");
+    }
+  }, [selectedItemorEdit]);
 
   const onDelete = async (item) => {
     try {
@@ -22,7 +34,6 @@ function AdminProjects() {
       dispatch(HideLoading());
       if (response.data.success) {
         message.success(response.data.message);
-        dispatch(HideLoading());
         dispatch(ReloadData(true));
       } else {
         message.error(response.data.message);
@@ -32,17 +43,35 @@ function AdminProjects() {
       message.error(error.message);
     }
   };
+
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
+
+      const formData = new FormData();
+      Object.entries(values).forEach(([key, value]) => {
+        if (key === "technologies") {
+          const tempTechs = value.split(",").map((tech) => tech.trim());
+          tempTechs.forEach((tech) => formData.append("technologies[]", tech));
+        } else {
+          formData.append(key, value);
+        }
+      });
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
       let response;
       if (selectedItemorEdit) {
-        response = await axios.post("/api/portfolio/update-project", {
-          ...values,
-          _id: selectedItemorEdit._id,
+        formData.append("_id", selectedItemorEdit._id);
+        response = await axios.post("/api/portfolio/update-project", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
-        response = await axios.post("/api/portfolio/add-project", values);
+        response = await axios.post("/api/portfolio/add-project", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       }
 
       dispatch(HideLoading());
@@ -50,8 +79,8 @@ function AdminProjects() {
         message.success(response.data.message);
         setShowAddEditModal(false);
         setSelectedItemorEdit(null);
-        dispatch(HideLoading());
         dispatch(ReloadData(true));
+        form.resetFields();
       } else {
         message.error(response.data.message);
       }
@@ -61,29 +90,51 @@ function AdminProjects() {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleAdd = () => {
+    setSelectedItemorEdit(null);
+    setImageFile(null);
+    setImagePreview("");
+    form.resetFields();
+    setShowAddEditModal(true);
+  };
+
+  const handleEdit = (project) => {
+    setSelectedItemorEdit(project);
+    setImageFile(null); // Clear any previous image file
+    setImagePreview(`http://localhost:5000/uploads/${project.image}`);
+    form.setFieldsValue({
+      ...project,
+      technologies: project.technologies.join(", "),
+    });
+    setShowAddEditModal(true);
+  };
+
   return (
     <div>
       <div className="flex justify-end">
         <button
           className="bg-primary text-white px-5 py-2 mb-3"
-          onClick={() => {
-            setSelectedItemorEdit(null);
-            setShowAddEditModal(true);
-          }}
+          onClick={handleAdd}
         >
-          Add project
+          Add Project
         </button>
       </div>
       <div className="grid grid-cols-3 gap-5">
         {project.map((project, index) => (
-          <div className="shadow border p-5 border-gray-400">
+          <div key={index} className="shadow border p-5 border-gray-400">
             <h1 className="text-primary text-xl font-bold mb-2">
               {project.title}
             </h1>
             <hr />
             <img
               src={`http://localhost:5000/uploads/${project.image}`}
-              alt="mihal"
+              alt="Project"
               className="h-40 w-60 text-center"
             />
             <h1 className="mb-2">Project Link: {project.link}</h1>
@@ -103,11 +154,7 @@ function AdminProjects() {
             <div className="flex justify-end gap-5 mt-3">
               <button
                 className="bg-primary text-white px-5 py-2"
-                onClick={() => {
-                  setSelectedItemorEdit(project);
-                  setShowAddEditModal(true);
-                  setType("edit");
-                }}
+                onClick={() => handleEdit(project)}
               >
                 Edit
               </button>
@@ -121,21 +168,20 @@ function AdminProjects() {
           </div>
         ))}
       </div>
-      {(type === "add" || selectedItemorEdit) && (
+      {showAddEditModal && (
         <Modal
           open={showAddEditModal}
-          title={selectedItemorEdit ? "Edit project" : "Add project"}
+          title={selectedItemorEdit ? "Edit Project" : "Add Project"}
           footer={null}
           onCancel={() => {
             setShowAddEditModal(false);
             setSelectedItemorEdit(null);
+            setImageFile(null);
+            setImagePreview("");
+            form.resetFields();
           }}
         >
-          <Form
-            layout="vertical"
-            onFinish={onFinish}
-            initialValues={selectedItemorEdit}
-          >
+          <Form form={form} layout="vertical" onFinish={onFinish}>
             <Form.Item name="link" label="Link">
               <Input placeholder="Link" />
             </Form.Item>
@@ -148,14 +194,37 @@ function AdminProjects() {
             <Form.Item name="description" label="Description">
               <Input.TextArea placeholder="Description" />
             </Form.Item>
-            <div className="flex justify-end">
+            <Form.Item label="Upload Image">
+              <input
+                type="file"
+                onChange={handleImageChange}
+                accept="image/*"
+              />
+              {imagePreview && (
+                <div style={{ marginTop: 10 }}>
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    style={{ width: 200 }}
+                  />
+                </div>
+              )}
+            </Form.Item>
+            <div className="flex justify-end gap-2">
               <button
+                type="button"
                 className="border-primary text-primary px-5 py-2"
-                onClick={() => setShowAddEditModal(false)}
+                onClick={() => {
+                  setShowAddEditModal(false);
+                  setSelectedItemorEdit(null);
+                  setImageFile(null);
+                  setImagePreview("");
+                  form.resetFields();
+                }}
               >
                 Cancel
               </button>
-              <button className="bg-primary text-white px-5 py-2">
+              <button className="bg-primary text-white px-5 py-2" type="submit">
                 {selectedItemorEdit ? "Update" : "Add"}
               </button>
             </div>
