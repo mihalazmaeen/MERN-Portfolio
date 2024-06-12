@@ -11,18 +11,46 @@ function AdminExperiences() {
   const [showAddEditModal, setShowAddEditModal] = React.useState(false);
   const [selectedItemorEdit, setSelectedItemorEdit] = React.useState(null);
   const { experience } = portfolioData;
+  const [type, setType] = React.useState("add");
 
+  const  onDelete = async (item) => {
+    try {
+      dispatch(ShowLoading());
+      const response = await axios.post("/api/portfolio/delete-experience", {
+        _id: item._id,
+      });
+      dispatch(HideLoading());
+      if (response.data.success) {
+        message.success(response.data.message);
+        dispatch(HideLoading());
+        dispatch(ReloadData(true));
+      } else {
+        message.error(response.data.message);
+      }
+  }catch(error){
+    dispatch(HideLoading());
+    message.error(error.message);
+  }
+  };
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post(
-        "/api/portfolio/add-experience",
-        values
-      );
+      let response;
+      if (selectedItemorEdit) {
+        response= await axios.post("/api/portfolio/update-experience", {
+          ...values,
+          _id: selectedItemorEdit._id,
+        });
+      }else{
+          response = await axios.post("/api/portfolio/add-experience", values);
+      }
+    
+  
       dispatch(HideLoading());
       if (response.data.success) {
         message.success(response.data.message);
         setShowAddEditModal(false);
+        setSelectedItemorEdit(null);
         dispatch(HideLoading());
         dispatch(ReloadData(true));
       } else {
@@ -58,46 +86,67 @@ function AdminExperiences() {
             <h1 className="mb-2">Period: {experience.period}</h1>
             <h1 className="mb-2">{experience.description}</h1>
             <div className="flex justify-end gap-5 mt-2">
-              <button className="bg-primary text-white px-5 py-2">Edit</button>
-              <button className="bg-red-500 text-white px-5 py-2">
+              <button
+                className="bg-primary text-white px-5 py-2"
+                onClick={() => {
+                  setSelectedItemorEdit(experience);
+                  setShowAddEditModal(true);
+                  setType("edit");
+                }}
+              >
+                Edit
+              </button>
+              <button
+                className="bg-red-500 text-white px-5 py-2"
+                onClick={() => onDelete(experience)}
+              >
                 Delete
               </button>
             </div>
           </div>
         ))}
       </div>
-      <Modal
-        open={showAddEditModal}
-        title={selectedItemorEdit ? "Edit Experience" : "Add Experience"}
-        footer={null}
-        onCancel={() => setShowAddEditModal(false)}
-      >
-        <Form layout="vertical" onFinish={onFinish}>
-          <Form.Item name="company" label="Company">
-            <Input placeholder="Company" />
-          </Form.Item>
-          <Form.Item name="title" label="Title">
-            <Input placeholder="Title" />
-          </Form.Item>
-          <Form.Item name="period" label="Period">
-            <Input placeholder="Period" />
-          </Form.Item>
-          <Form.Item name="description" label="Description">
-            <Input.TextArea placeholder="Description" />
-          </Form.Item>
-          <div className="flex justify-end">
-            <button
-              className="border-primary text-primary px-5 py-2"
-              onClick={() => setShowAddEditModal(false)}
-            >
-              Cancel
-            </button>
-            <button className="bg-primary text-white px-5 py-2">
-              {selectedItemorEdit ? "Update" : "Add"}
-            </button>
-          </div>
-        </Form>
-      </Modal>
+      {(type === "add" || selectedItemorEdit) && (
+        <Modal
+          open={showAddEditModal}
+          title={selectedItemorEdit ? "Edit Experience" : "Add Experience"}
+          footer={null}
+          onCancel={() => {
+            setShowAddEditModal(false);
+            setSelectedItemorEdit(null);
+          }}
+        >
+          <Form
+            layout="vertical"
+            onFinish={onFinish}
+            initialValues={selectedItemorEdit}
+          >
+            <Form.Item name="company" label="Company">
+              <Input placeholder="Company" />
+            </Form.Item>
+            <Form.Item name="title" label="Title">
+              <Input placeholder="Title" />
+            </Form.Item>
+            <Form.Item name="period" label="Period">
+              <Input placeholder="Period" />
+            </Form.Item>
+            <Form.Item name="description" label="Description">
+              <Input.TextArea placeholder="Description" />
+            </Form.Item>
+            <div className="flex justify-end">
+              <button
+                className="border-primary text-primary px-5 py-2"
+                onClick={() => setShowAddEditModal(false)}
+              >
+                Cancel
+              </button>
+              <button className="bg-primary text-white px-5 py-2">
+                {selectedItemorEdit ? "Update" : "Add"}
+              </button>
+            </div>
+          </Form>
+        </Modal>
+      )}
     </div>
   );
 }
