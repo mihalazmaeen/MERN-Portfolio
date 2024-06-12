@@ -2,10 +2,8 @@ import { Modal } from "antd";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Form, Input, Button, message } from "antd";
-import { ShowLoading, HideLoading} from "../../redux/rootSlice";
+import { ShowLoading, HideLoading, ReloadData } from "../../redux/rootSlice";
 import axios from "axios";
-
-
 
 function AdminExperiences() {
   const dispatch = useDispatch();
@@ -14,25 +12,27 @@ function AdminExperiences() {
   const [selectedItemorEdit, setSelectedItemorEdit] = React.useState(null);
   const { experience } = portfolioData;
 
-    const onFinish = async (values) => {
-      try {
-        dispatch(ShowLoading());
-        const response = await axios.post("/api/portfolio/add-experience", {
-          values
-        });
+  const onFinish = async (values) => {
+    try {
+      dispatch(ShowLoading());
+      const response = await axios.post(
+        "/api/portfolio/add-experience",
+        values
+      );
+      dispatch(HideLoading());
+      if (response.data.success) {
+        message.success(response.data.message);
+        setShowAddEditModal(false);
         dispatch(HideLoading());
-        if (response.data.success) {
-          message.success(response.data.message);
-          setShowAddEditModal(false);
-          dispatch(HideLoading());
-        } else {
-          message.error(response.data.message);
-        }
-      } catch (error) {
-        dispatch(HideLoading());
-        message.error(error.message);
+        dispatch(ReloadData(true));
+      } else {
+        message.error(response.data.message);
       }
-    };
+    } catch (error) {
+      dispatch(HideLoading());
+      message.error(error.message);
+    }
+  };
 
   return (
     <div>
@@ -83,7 +83,7 @@ function AdminExperiences() {
             <Input placeholder="Period" />
           </Form.Item>
           <Form.Item name="description" label="Description">
-            <Input.TextArea placeholder="Period" />
+            <Input.TextArea placeholder="Description" />
           </Form.Item>
           <div className="flex justify-end">
             <button
