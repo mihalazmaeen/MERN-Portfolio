@@ -7,19 +7,21 @@ function Contact() {
 
   const { contact } = portfolioData;
 
-
   return (
     <div>
       <SectionTitle title="Say Hello" />
       <div className="flex sm:flex-col items-center">
         <div className="flex flex-col gap-1">
           <h1 className="text-white">{"{"}</h1>
-          {Object.keys(contact).map((key, index) => (
-            <h1 key={index} className="ml-5">
-              <span className="text-tertiary">{key}: </span>
-              <span className="text-white">{contact[key].toString()}</span>
-            </h1>
-          ))}
+          {Object.keys(contact).map(
+            (key, index) =>
+              key !== "_id" && (
+                <h1 key={index} className="ml-5">
+                  <span className="text-tertiary">{key}: </span>
+                  <span className="text-white">{contact[key].toString()}</span>
+                </h1>
+              )
+          )}
           <h1 className="text-white">{"}"}</h1>
         </div>
         <div className="h-[400px] ml-auto sm:ml-2">

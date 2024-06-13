@@ -6,6 +6,9 @@ import AdminAbout from "./AdminAbout";
 import AdminExperiences from "./AdminExperiences";
 import { useSelector } from "react-redux";
 import AdminProjects from "./AdminProjects";
+import AdminEducation from "./AdminEducation";
+import AdminContact from "./AdminContact";
+
 
 function Admin() {
   const { portfolioData } = useSelector((state) => state.root);
@@ -31,13 +34,23 @@ function Admin() {
       label: "Projects",
       children: <AdminProjects />,
     },
+    {
+      key: "5",
+      label: "Education",
+      children: <AdminEducation />,
+    },
+    {
+      key: "6",
+      label: "Contact",
+      children: <AdminContact />,
+    }
   ];
   return (
     <div>
       <Header />
       {portfolioData && (
         <div className="mt-5 p-5">
-          <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+          <Tabs defaultActiveKey="1" items={items} onChange={onChange} tabPosition="left" />
         </div>
       )}
     </div>

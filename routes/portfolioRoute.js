@@ -208,4 +208,102 @@ router.post("/delete-project", async (req, res) => {
   }
 });
 
+// Add Education
+router.post("/add-education", async (req, res) => {
+  try {
+    const education = new Education(req.body);
+    await education.save();
+    res.status(200).send({
+      data: education,
+      success: true,
+      message: "Education added successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+// Update Education
+router.post("/update-education", async (req, res) => {
+  try {
+    const education = await Education.findByIdAndUpdate(
+      { _id: req.body._id },
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({
+      data: education,
+      success: true,
+      message: "Education updated successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+// Delete Education
+router.post("/delete-education", async (req, res) => {
+  try {
+    const education = await Education.findByIdAndDelete({
+      _id: req.body._id,
+    });
+    res.status(200).send({
+      data: education,
+      success: true,
+      message: "Education deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Add contact
+router.post("/add-contact", async (req, res) => {
+  try {
+    const contact = new Contact(req.body);
+    await contact.save();
+    res.status(200).send({
+      data: contact,
+      success: true,
+      message: "Contact added successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+// Update contact
+router.post("/update-contact", async (req, res) => {
+  try {
+    const contact = await Contact.findByIdAndUpdate(
+      { _id: req.body._id },
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({
+      data: contact,
+      success: true,
+      message: "Education updated successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+// Delete contact
+// router.post("/delete-contact", async (req, res) => {
+//   try {
+//     const contact = await Contact.findByIdAndDelete({
+//       _id: req.body._id,
+//     });
+//     res.status(200).send({
+//       data: contact,
+//       success: true,
+//       message: "Contact deleted successfully",
+//     });
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
+
 module.exports = router;
