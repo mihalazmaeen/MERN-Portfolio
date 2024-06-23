@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const multer = require("multer");
+const User = require("../models/userModel")
 const {
   Intro,
   About,
@@ -305,5 +306,32 @@ router.post("/update-contact", async (req, res) => {
 //     res.status(500).send(error);
 //   }
 // });
+
+router.post("/admin-login", async (req, res) => {
+  try {
+    const user = await User.findOne({
+      username: req.body.username,
+      password: req.body.password,
+    });
+    user.password="";
+    if (user) {
+      res.status(200).send({
+        data: user,
+        success: true,
+        message: "Login successfully",
+      });
+    } else {
+      res.status(401).send({
+        success: false,
+        message: "Login failed. Invalid username or password.",
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "An error occurred during login. Please try again later.",
+    });
+  }
+});
 
 module.exports = router;
